@@ -49,6 +49,7 @@ const HEIGHT_SCALE = CANVAS_HEIGHT / MAZE_HEIGHT;
 function drawPlayer(position) {
   const x = Math.floor(position / MAZE_WIDTH);
   const y = position % MAZE_WIDTH;
+  ctx.drawImage(tileset, 32 * 8, 32 * 16, 32, 32, (MAZE_WIDTH - 1) * WIDTH_SCALE + 2, (MAZE_HEIGHT - 1) * HEIGHT_SCALE + 2, 16, 16);
   ctx.drawImage(tileset, 0, 32 * 1, 32, 32, x * WIDTH_SCALE + 2, y * HEIGHT_SCALE + 2, 16, 16);
   //ctx.fillStyle = 'red';
   //ctx.fillRect(x * WIDTH_SCALE + 3, y * HEIGHT_SCALE + 3, WIDTH_SCALE - 6, HEIGHT_SCALE - 6);
