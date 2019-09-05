@@ -194,6 +194,9 @@ document.addEventListener("keydown", function(event) {
   if (!won && playerPosition === MAZE_WIDTH * MAZE_HEIGHT - 1) {
     won = true;
     sounds.win.play();
+    sounds.win.addEventListener("ended", () => {
+      window.location.reload();
+    });
   }
   ctx.clearRect(0, 0, $canvas.width, $canvas.height);
   drawMaze(m, memory);
