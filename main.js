@@ -1,5 +1,8 @@
 const $canvas = document.getElementById('canvas');
 const ctx = $canvas.getContext('2d');
+const tileset = new Image();
+tileset.src = './tileset.png';
+
 ctx.scale(2,2);
 
 function getWalls(number) {
@@ -46,8 +49,9 @@ const HEIGHT_SCALE = CANVAS_HEIGHT / MAZE_HEIGHT;
 function drawPlayer(position) {
   const x = Math.floor(position / MAZE_WIDTH);
   const y = position % MAZE_WIDTH;
-  ctx.fillStyle = 'red';
-  ctx.fillRect(x * WIDTH_SCALE + 3, y * HEIGHT_SCALE + 3, WIDTH_SCALE - 6, HEIGHT_SCALE - 6);
+  ctx.drawImage(tileset, 0, 32 * 1, 32, 32, x * WIDTH_SCALE + 2, y * HEIGHT_SCALE + 2, 16, 16);
+  //ctx.fillStyle = 'red';
+  //ctx.fillRect(x * WIDTH_SCALE + 3, y * HEIGHT_SCALE + 3, WIDTH_SCALE - 6, HEIGHT_SCALE - 6);
 }
 
 function drawMaze(maze, memory) {
@@ -138,7 +142,9 @@ console.log('ITERATION', i);
 drawMaze(m, memory);
 
 let playerPosition = 0;
-drawPlayer(playerPosition);
+tileset.onload = () => {
+  drawPlayer(playerPosition);
+};
 
 document.addEventListener("keydown", function(event) {
   const maze = m;
