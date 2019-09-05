@@ -3,6 +3,12 @@ const ctx = $canvas.getContext('2d');
 const tileset = new Image();
 tileset.src = './tileset.png';
 
+
+const sounds = {
+  walk: new Audio('./sound/walk.wav'),
+  win: new Audio('./sound/win.wav'),
+};
+
 ctx.scale(2,2);
 
 function getWalls(number) {
@@ -45,11 +51,14 @@ function getMaze(availableWalls, extraEmptyChance = 0) {
 
 const WIDTH_SCALE = CANVAS_WIDTH / MAZE_WIDTH;
 const HEIGHT_SCALE = CANVAS_HEIGHT / MAZE_HEIGHT;
+let won = false;
 
 function drawPlayer(position) {
   const x = Math.floor(position / MAZE_WIDTH);
   const y = position % MAZE_WIDTH;
-  ctx.drawImage(tileset, 32 * 8, 32 * 16, 32, 32, (MAZE_WIDTH - 1) * WIDTH_SCALE + 2, (MAZE_HEIGHT - 1) * HEIGHT_SCALE + 2, 16, 16);
+  if (!won) {
+    ctx.drawImage(tileset, 32 * 8, 32 * 16, 32, 32, (MAZE_WIDTH - 1) * WIDTH_SCALE + 2, (MAZE_HEIGHT - 1) * HEIGHT_SCALE + 2, 16, 16);
+  }
   ctx.drawImage(tileset, 0, 32 * 1, 32, 32, x * WIDTH_SCALE + 2, y * HEIGHT_SCALE + 2, 16, 16);
   //ctx.fillStyle = 'red';
   //ctx.fillRect(x * WIDTH_SCALE + 3, y * HEIGHT_SCALE + 3, WIDTH_SCALE - 6, HEIGHT_SCALE - 6);
@@ -158,26 +167,34 @@ document.addEventListener("keydown", function(event) {
   switch (key) { // change to event.key to key to use the above variable
     case "ArrowLeft":
       if (x > 0 && !walls[1] && !getWalls(maze[playerPosition - MAZE_WIDTH])[3]) {
+        sounds.walk.play();
         playerPosition = playerPosition - MAZE_WIDTH;
       }
       break;
     case "ArrowRight":
       if (x < MAZE_WIDTH - 1 && !walls[3] && !getWalls(maze[playerPosition + MAZE_WIDTH])[1]) {
+        sounds.walk.play();
         playerPosition = playerPosition + MAZE_WIDTH;
       }
       break;
     case "ArrowUp":
       if (y > 0 && !walls[0] && !getWalls(maze[playerPosition - 1])[2]) {
+        sounds.walk.play();
         playerPosition--;
       }
       break;
     case "ArrowDown":
       if (y < MAZE_HEIGHT - 1 && !walls[2] && !getWalls(maze[playerPosition + 1])[0]) {
+        sounds.walk.play();
         playerPosition++;
       }
       break;
   }
 
+  if (!won && playerPosition === MAZE_WIDTH * MAZE_HEIGHT - 1) {
+    won = true;
+    sounds.win.play();
+  }
   ctx.clearRect(0, 0, $canvas.width, $canvas.height);
   drawMaze(m, memory);
   drawPlayer(playerPosition);
